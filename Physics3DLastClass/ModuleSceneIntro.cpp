@@ -6,6 +6,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	vel,red,blue = 0;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -17,25 +18,54 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	App->camera->Move(vec3(18.0f, 20.0f, 0.0f));
+	App->camera->LookAt(vec3(0, 5, 0));
 
 	//longitud circuit
-	float road_width = 100.0f;
-	float road_height = 5.0f;
-	float circuit_x = 15.0f;
-	float circuit_y = 80.0f;
-
+	float road_width = 20.0f;
+	float road_height = 2.0f;
+	float circuit_x = 50.0f;
 	recta1.size.Set(road_width, road_height, circuit_x);
 	recta1.SetPos(0, road_height / 2, circuit_x / 2);
 	App->physics->AddBody(recta1, 0)->collision_listeners.add(this);
 
-	vec3 hola(0, 0, 1);
-	curva1.height = road_height;
-	curva1.SetRotation(90, hola);
-	curva1.radius = 10.0f;
-	curva1.SetPos(-circuit_x, 0, 0);
-	App->physics->AddBody(curva1, 0)->collision_listeners.add(this);;
+	recta2.size.Set(road_width, road_height, 10);
+	recta2.SetPos(0, road_height / 2, 56);
+	App->physics->AddBody(recta2, 0)->collision_listeners.add(this);
+
+	vec3 vec(0, 0, 1);
+	poste1.height = 10.0f;
+	poste1.SetRotation(90, vec);
+	poste1.radius = 1.0f;
+	poste1.SetPos(-9, 7, 56);
+	App->physics->AddBody(poste1, 0);
+
+
+	poste2.height = 10.0f;
+	poste2.SetRotation(90, vec);
+	poste2.radius = 1.0f;
+	poste2.SetPos(9, 7, 56);
+	App->physics->AddBody(poste2, 0);
+
+	cartell.size.Set(road_width, 3, 2);
+	cartell.SetPos(0, 13.5, 56);
+	App->physics->AddBody(cartell, 0)->collision_listeners.add(this);
+
+	
+	
+	curva2.height = 2.0f;
+	curva2.SetRotation(90, vec);
+	curva2.radius = 7.0f;
+	curva2.SetPos(0, 1, 70);
+	App->physics->AddBody(curva2, 0);
+
+	block.size.Set(5, 5, 5);
+	//block.SetPos(0, 13, 20);
+	pbblock = App->physics->AddBody(block, 0);
+
+
+	
+	
 
 
 
@@ -57,8 +87,58 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	/*p2List_item<PhysBody3D*>* item = pbpieces.getFirst();
+	p2List_item<Primitive>* item_primitive = pieces.getFirst();
+	while (item_primitive != NULL)
+	{
+		item->data->GetTransform(&(item_primitive->data.transform));
+		item_primitive->data.Render();
+		
+
+		item = item->next;
+		item_primitive = item_primitive->next;
+		
+	}*/
+
 	recta1.Render();
-	curva1.Render();
+	recta2.Render();
+	poste1.Render();
+	poste2.Render();
+	cartell.Render();
+	curva2.Render();
+
+	
+	for (red = 0; red <= 20; red++)
+	{
+		
+		
+		pbblock->GetTransform(&(block.transform));
+		//block.SetPos(0, red, 20);
+		//pbblock->Push(red, 0, 0);
+		block.Render();
+		
+		
+	}
+	
+
+
+	
+
+	//block.color.Set(100, 0, 50);
+	
+	
+	
+
+	
+	
+	
+	
+
+
+	
+
+
+
 	return UPDATE_CONTINUE;
 }
 

@@ -43,8 +43,17 @@ public:
 	PhysMotor3D* right_wheel;
 
 	//circuit
-	Cube recta1, recta2;
-	Cylinder curva1, curva2;
+	PhysBody3D* pbblock;
+	Cube recta1, recta2, cartell, block;
+	Cylinder curva1, curva2, poste1, poste2;
+
+	int vel, red, blue;
+
+
+
+
+	p2List<PhysBody3D*> pbpieces;
+	p2List<Primitive> pieces;
 
 
 };
