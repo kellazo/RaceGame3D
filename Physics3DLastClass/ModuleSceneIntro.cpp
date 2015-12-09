@@ -18,9 +18,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(18.0f, 20.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 5, 0));
-
+	App->camera->Move(vec3(0.0f, 13.0f, -10.0f));
+	App->camera->LookAt(vec3(0, 5, 6));
 	//longitud circuit
 	float road_width = 20.0f;
 	float road_height = 2.0f;
