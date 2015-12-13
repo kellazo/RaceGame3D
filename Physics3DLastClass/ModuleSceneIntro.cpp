@@ -3,6 +3,8 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "ModulePlayer.h"
+#include "PhysVehicle3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -63,8 +65,16 @@ bool ModuleSceneIntro::Start()
 	pbblock = App->physics->AddBody(block, 0);
 
 
-	
-	
+	//floor.size.Set(500.0f, 1.0f, 500.0f);
+	//floor.SetPos(0, -1, 0);
+	//floor.color = Black;
+
+	floor.size.Set(5, 3, 1);
+	floor.SetPos(0.0f, 4.5f, 20.0f);
+
+	floor_sensor = App->physics->AddBody(floor, 0.0f);
+	floor_sensor->SetAsSensor(true);
+	floor_sensor->collision_listeners.add(this);
 
 
 
@@ -86,6 +96,10 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	//floor sensor
+	floor_sensor->GetTransform(&floor.transform);
+	floor.Render();
+
 	/*p2List_item<PhysBody3D*>* item = pbpieces.getFirst();
 	p2List_item<Primitive>* item_primitive = pieces.getFirst();
 	while (item_primitive != NULL)
@@ -106,42 +120,26 @@ update_status ModuleSceneIntro::Update(float dt)
 	cartell.Render();
 	curva2.Render();
 
-	
 	for (red = 0; red <= 20; red++)
 	{
-		
 		
 		pbblock->GetTransform(&(block.transform));
 		//block.SetPos(0, red, 20);
 		//pbblock->Push(red, 0, 0);
 		block.Render();
 		
-		
 	}
 	
-
-
-	
-
 	//block.color.Set(100, 0, 50);
 	
-	
-	
-
-	
-	
-	
-	
-
-
-	
-
-
 
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+	LOG("Hit!");
+	App->player->vehicle->SetPos(0, 3, 10);
+
 }
 

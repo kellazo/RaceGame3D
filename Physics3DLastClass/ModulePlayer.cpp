@@ -97,9 +97,11 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 12, 10);
-	
+	vehicle->SetPos(0, 3, 10);
 	xpos = vec3(0.0f, 0.0f, 1.0f);
+
+
+
 	return true;
 }
 
@@ -118,9 +120,7 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
-		acceleration = 4*MAX_ACCELERATION;
-		
-	
+		acceleration = MAX_ACCELERATION;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
@@ -145,8 +145,15 @@ update_status ModulePlayer::Update(float dt)
 		brake = BRAKE_POWER;
 	}
 
-	
-	App->camera->Position = vehicle->GetPos();
+	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT)
+	{
+		acceleration = 4*MAX_ACCELERATION;
+	}
+
+	vec3 cam_position = vehicle->GetPos();
+	App->camera->Position = cam_position;
+	App->camera->Position.y = (App->camera->Position.y + 10.0f);
+	App->camera->Position.z = (App->camera->Position.z - 20.0f);
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);

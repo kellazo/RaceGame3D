@@ -62,8 +62,9 @@ bool ModulePhysics3D::Start()
 		btDefaultMotionState* myMotionState = new btDefaultMotionState();
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
 
-		btRigidBody* body = new btRigidBody(rbInfo);
-		world->addRigidBody(body);
+		//btRigidBody* body = new btRigidBody(rbInfo);
+		//world->addRigidBody(body);
+
 	}
 
 	return true;
@@ -84,22 +85,23 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 		int numContacts = contactManifold->getNumContacts();
 		if(numContacts > 0)
 		{
+			//Apanyo
 			PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
 			PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
-
-			if(pbodyA && pbodyB)
+			PhysBody3D* hola = (PhysBody3D*)vehicles.getFirst();
+			if(hola && pbodyB && pbodyB->IsSensor())
 			{
-				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
+				p2List_item<Module*>* item = hola->collision_listeners.getFirst();
 				while(item)
 				{
-					item->data->OnCollision(pbodyA, pbodyB);
+					item->data->OnCollision(hola, pbodyB);
 					item = item->next;
 				}
 
 				item = pbodyB->collision_listeners.getFirst();
 				while(item)
 				{
-					item->data->OnCollision(pbodyB, pbodyA);
+					item->data->OnCollision(pbodyB, hola);
 					item = item->next;
 				}
 			}

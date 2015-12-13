@@ -19,12 +19,15 @@ public:
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
 	void SetPos(float x, float y, float z);
-	
+	void SetAsSensor(bool is_sensor);
+	bool IsSensor() const;
+
 	vec3 GetPos();
 
 
 private:
 	btRigidBody* body = nullptr;
+	bool is_sensor = false;
 
 public:
 	p2List<Module*> collision_listeners;

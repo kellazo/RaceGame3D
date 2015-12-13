@@ -56,4 +56,10 @@ public:
 	p2List<Primitive> pieces;
 
 
+	//Floor Sensor
+	PhysBody3D* floor_sensor;
+	Cube floor;
+
+
+
 };
