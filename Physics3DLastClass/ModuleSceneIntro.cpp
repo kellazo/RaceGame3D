@@ -65,12 +65,12 @@ bool ModuleSceneIntro::Start()
 	pbblock = App->physics->AddBody(block, 0);
 
 
-	//floor.size.Set(500.0f, 1.0f, 500.0f);
-	//floor.SetPos(0, -1, 0);
-	//floor.color = Black;
+	floor.size.Set(500.0f, 1.0f, 500.0f);
+	floor.SetPos(0, -1, 0);
+	floor.color = Black;
 
-	floor.size.Set(5, 3, 1);
-	floor.SetPos(0.0f, 4.5f, 20.0f);
+	//floor.size.Set(5, 3, 1);
+	//floor.SetPos(0.0f, 4.5f, 20.0f);
 
 	floor_sensor = App->physics->AddBody(floor, 0.0f);
 	floor_sensor->SetAsSensor(true);
@@ -139,7 +139,10 @@ update_status ModuleSceneIntro::Update(float dt)
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	LOG("Hit!");
-	App->player->vehicle->SetPos(0, 3, 10);
 
+	//App->player->vehicle->SetPos(0, 3, 10);
+	App->player->vehicle->SetTransform(&App->player->ini_trans);
+	App->player->break_start = true;
+		
 }
 

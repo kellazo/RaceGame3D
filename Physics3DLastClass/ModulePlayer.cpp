@@ -18,6 +18,8 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
+	break_start = false;
+
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
@@ -98,6 +100,7 @@ bool ModulePlayer::Start()
 
 	vehicle = App->physics->AddVehicle(car);
 	vehicle->SetPos(0, 3, 10);
+	vehicle->GetTransform(&ini_trans);
 	xpos = vec3(0.0f, 0.0f, 1.0f);
 
 
@@ -120,6 +123,7 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
+		break_start = false;
 		acceleration = MAX_ACCELERATION;
 	}
 
@@ -148,6 +152,11 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT)
 	{
 		acceleration = 4*MAX_ACCELERATION;
+	}
+
+	if (break_start == true)
+	{
+		brake = BRAKE_POWER;
 	}
 
 	vec3 cam_position = vehicle->GetPos();
