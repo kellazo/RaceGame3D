@@ -21,15 +21,14 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true);
+	void MoveCubeX();
+	
 public:
-	/*
-	PhysBody3D* pb_snake[MAX_SNAKE];
-	Sphere s_snake[MAX_SNAKE];
-
-	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
-	*/
-
+	
+	p2List<Cube*> cube_list;
+	p2List<Cube*> cube_list_move;
+	
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
@@ -46,13 +45,29 @@ public:
 
 	//long circuit
 	float circuit_x;
+	float road_width = 10.0f;
+	float road_height = 2.0f;
+	vec3 road_size;
+	//more road path
+	Cube road2, road3, road4, road5, road6, road7, road8, road9, road10;
 
-	//pole & block
-	PhysBody3D* pbblock;
+	//Level1
+	vec3 cube_size;
+	Cube elevator1;
+	Cube c_left1, c_right1, c_left2, c_right2;
+	PhysBody3D* pc_left1;
+	PhysBody3D* pc_right1;
+	PhysBody3D* pc_left2;
+	PhysBody3D* pc_right2;
+
+	//road with blocks x axis motion
+
+	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
+	
+
+	/*
 	Cube road_start, road_path1, poster, block;
 	Cylinder pole_left, pole_right;
-	float posY_block, temp;
-
 	//Simple Pendulum
 	PhysBody3D* psupport;
 	PhysBody3D* prod;
@@ -62,16 +77,9 @@ public:
 	Sphere bob;
 	float posX_bob, tempb;
 
-	//road with blocks x axis motion
-	Cube c_left1, c_left2, c_right1, c_right2, road_path2;
-	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
-	PhysBody3D* pc_left1;
-	PhysBody3D* pc_left2;
-	PhysBody3D* pc_right1;
-	PhysBody3D* pc_right2;
-
-	//more road path
-	Cube road1, road2, road3, road4, road5, road6, road7, road8, road9, road10;
+	//block y motion
+	//PhysBody3D* pbblock;
+	//float posY_block, temp;
 
 	//blocks from ground and up
 	Cube blockground1, blockground2;
@@ -95,7 +103,7 @@ public:
 	//flippers wall
 
 	//hole road
-
+	*/
 
 	p2List<PhysBody3D*> pbpieces;
 	p2List<Primitive> pieces;

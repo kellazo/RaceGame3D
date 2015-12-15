@@ -25,8 +25,9 @@ public:
 	float turn;
 	float acceleration;
 	float brake;
-
-	vec3 xpos;
-	mat4x4 ini_trans;
 	bool break_start;
+	vec3 xpos;
+
+	mat4x4 ini_trans;
+	
 };
