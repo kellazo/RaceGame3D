@@ -9,13 +9,19 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	circuit_x = 50.0f;
+	circuit_x2 = 50.0f;
 	road_width = 20.0f;
 	road_height = 2.0f;
+	high_map = 7.0f;
+	//Level1
 	pl1 = pl2 = 12.0f;
 	pr1 = pr2 = -12.0f;
-	tl1 = tl2 = tr1 = tr2 = 0.3f;
-	pos_Y_elevator = 7.0f;
-	temp_Y_elevator = 0.1f;
+	tl1 = tl2 = tr1 = tr2 = 0.2f;
+	pY_elevator = 7.0f;
+	tY_elevator = 0.02f;
+	//Level2
+	pY_elevator2 = 14.0f;
+	tY_elevator2 = 0.02f;
 
 	road_size = vec3(road_width, road_height, circuit_x);
 	cube_size = vec3(3, 2, 3);
@@ -65,9 +71,22 @@ bool ModuleSceneIntro::Start()
 	c_left2 = CreateCube(cube_size, vec3(12, 3, 85), false);
 	pc_left2 = App->physics->AddBody(c_left2, 0);
 
-	c_right2 = CreateCube(cube_size, vec3(12, 3, 0), false);
-	pc_right2 = App->physics->AddBody(c_right2, 75);
+	c_right2 = CreateCube(cube_size, vec3(12, 3, 75), false);
+	pc_right2 = App->physics->AddBody(c_right2, 0);
 
+	//Level2
+	CreateCube(road_size, vec3(0, high_map, circuit_x / 2 + circuit_x * 3));
+	CreateCube(vec3(1, 4, 1), vec3(9, 10, 45+50*3));
+	CreateCube(vec3(1, 4, 1), vec3(7, 10, 45+50*3));
+	CreateCube(vec3(road_width / 3, road_height, circuit_x / 3), vec3(-7, high_map, 209));
+	CreateCube(vec3(road_width / 4, road_height, circuit_x/3+4.5f), vec3(0, high_map, 214+road_width/3), true, 90.0f, vec3(0, 1, 0));
+	CreateCube(vec3(road_width / 5, road_height, circuit_x / 3+8.5f), vec3(8.5f, high_map, 220 + road_width / 3 + road_width / 2));
+	
+	elevator2 = CreateCube(road_size, vec3(0, high_map, circuit_x / 2 + circuit_x * 5), false);
+	p_elevator2 = App->physics->AddBody(elevator, 0);
+
+	//Level3
+	CreateCube(road_size, vec3(0, high_map*2, circuit_x / 2 + circuit_x * 6));
 	/*
 
 	vec3 vec(0, 0, 1);
@@ -123,10 +142,6 @@ bool ModuleSceneIntro::Start()
 	App->physics->AddConstraintHinge(*(prod), *(pbob), anchorAr, anchorBb, axisA, axisB);
 
 	//more roads
-
-	road2.size.Set(road_width, road_height, circuit_x);
-	road2.SetPos(0, road_height / 2, circuit_x / 2 + circuit_x * 3);
-	App->physics->AddBody(road2, 0)->collision_listeners.add(this);
 
 	road3.size.Set(road_width, road_height, circuit_x);
 	road3.SetPos(0, road_height / 2, circuit_x / 2 + circuit_x * 4);
@@ -229,6 +244,9 @@ update_status ModuleSceneIntro::Update(float dt)
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
+	for (p2List_item<Cube*>* tmp = cube_list.getFirst(); tmp != NULL; tmp = tmp->next){
+		tmp->data->Render();
+	}
 
 	//floor sensor
 	floor_sensor->GetTransform(&floor.transform);
@@ -237,11 +255,11 @@ update_status ModuleSceneIntro::Update(float dt)
 	//Level1
 	//Motion of Cube blocks on X axis
 	MoveCubeX();
-	MoveElevator();
+	MoveElevators();
 
-	for (p2List_item<Cube*>* tmp = cube_list.getFirst(); tmp != NULL; tmp = tmp->next){
-		tmp->data->Render();
-	}
+	//Level2
+
+
 	/*p2List_item<PhysBody3D*>* item = pbpieces.getFirst();
 	p2List_item<Primitive>* item_primitive = pieces.getFirst();
 	while (item_primitive != NULL)
@@ -395,10 +413,15 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		
 }
 
-Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phys){
+Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phys, float angle, const vec3 axis){
 	Cube* new_cube = new Cube();
 	new_cube->size.Set(size.x,size.y,size.z);
+
+	if (angle != 0.0f)
+		new_cube->SetRotation(angle, axis);
+
 	new_cube->SetPos(position.x, position.y, position.z);
+	
 	if (phys==false){
 		cube_list_move.add(new_cube);
 	}
@@ -450,14 +473,25 @@ void ModuleSceneIntro::MoveCubeX(){
 	c_right2.Render();
 }
 
-void ModuleSceneIntro::MoveElevator(){
+void ModuleSceneIntro::MoveElevators(){
 	p_elevator->GetTransform(&elevator.transform);
-	if (pos_Y_elevator >= 7)
-		temp_Y_elevator = temp_Y_elevator * -1;
-	if (pos_Y_elevator <= 0)
-		temp_Y_elevator = temp_Y_elevator * -1;
-	pos_Y_elevator += temp_Y_elevator;
+	if (pY_elevator >= high_map)
+		tY_elevator = tY_elevator * -1;
+	if (pY_elevator <= 0)
+		tY_elevator = tY_elevator * -1;
+	pY_elevator += tY_elevator;
 
-	p_elevator->SetPos(0,pos_Y_elevator, circuit_x / 2 + circuit_x * 2);
+	p_elevator->SetPos(0,pY_elevator, circuit_x / 2 + circuit_x * 2);
 	elevator.Render();
+
+	p_elevator2->GetTransform(&elevator2.transform);
+	if (pY_elevator2 >= high_map*2)
+		tY_elevator2 = tY_elevator2 * -1;
+	if (pY_elevator2 <= high_map)
+		tY_elevator2 = tY_elevator2 * -1;
+	pY_elevator2 += tY_elevator2;
+
+	p_elevator2->SetPos(0, pY_elevator2, circuit_x / 2 + circuit_x * 5);
+	elevator2.Render();
+
 }

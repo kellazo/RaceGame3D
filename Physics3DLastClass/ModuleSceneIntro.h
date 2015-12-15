@@ -21,11 +21,13 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true);
+	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true, float angle=0.0f, const vec3 axis=vec3(0,0,0));
+	void MoveElevators();
 	
 	//Level1
 	void MoveCubeX();
-	void MoveElevator();
+	//Level2
+	
 
 public:
 	
@@ -47,12 +49,13 @@ public:
 	//------CIRCUIT
 
 	//long circuit
-	float circuit_x;
+	float circuit_x, circuit_x2;
 	float road_width = 10.0f;
 	float road_height = 2.0f;
+	float high_map;
 	vec3 road_size;
 	//more road path
-	Cube road2, road3, road4, road5, road6, road7, road8, road9, road10;
+	Cube road3, road4, road5, road6, road7, road8, road9, road10;
 
 	//Level1
 	vec3 cube_size;
@@ -67,9 +70,15 @@ public:
 	//variables for blocks x axis motion
 	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
 	//variables elevator
-	float pos_Y_elevator, temp_Y_elevator;
+	float pY_elevator, tY_elevator;
 
 	//Level2
+	Cube elevator2;
+	PhysBody3D* p_elevator2;
+	float pY_elevator2, tY_elevator2;
+	
+	//Level3
+
 	/*
 	Cube road_start, road_path1, poster, block;
 	Cylinder pole_left, pole_right;

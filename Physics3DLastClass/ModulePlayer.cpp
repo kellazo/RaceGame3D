@@ -166,9 +166,9 @@ update_status ModulePlayer::Update(float dt)
 	}
 
 	vec3 cam_position = vehicle->GetPos();
-	App->camera->Position = cam_position;
-	App->camera->Position.y = (App->camera->Position.y + 15.0f);
-	App->camera->Position.z = (App->camera->Position.z - 30.0f);
+	//App->camera->Position = cam_position;
+	//App->camera->Position.y = (App->camera->Position.y + 15.0f);
+	//App->camera->Position.z = (App->camera->Position.z - 30.0f);
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
