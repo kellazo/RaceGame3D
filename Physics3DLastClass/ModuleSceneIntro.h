@@ -22,8 +22,11 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true);
-	void MoveCubeX();
 	
+	//Level1
+	void MoveCubeX();
+	void MoveElevator();
+
 public:
 	
 	p2List<Cube*> cube_list;
@@ -53,17 +56,18 @@ public:
 
 	//Level1
 	vec3 cube_size;
-	Cube elevator1;
+	Cube elevator;
 	Cube c_left1, c_right1, c_left2, c_right2;
 	PhysBody3D* pc_left1;
 	PhysBody3D* pc_right1;
 	PhysBody3D* pc_left2;
 	PhysBody3D* pc_right2;
+	PhysBody3D* p_elevator;
 
-	//road with blocks x axis motion
-
+	//variables for blocks x axis motion
 	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
-	
+	//variables elevator
+	float pos_Y_elevator, temp_Y_elevator;
 
 	/*
 	Cube road_start, road_path1, poster, block;

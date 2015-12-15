@@ -14,6 +14,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	pl1 = pl2 = 12.0f;
 	pr1 = pr2 = -12.0f;
 	tl1 = tl2 = tr1 = tr2 = 0.3f;
+	pos_Y_elevator = 7.0f;
+	temp_Y_elevator = 0.1f;
 
 	road_size = vec3(road_width, road_height, circuit_x);
 	cube_size = vec3(3, 2, 3);
@@ -49,9 +51,10 @@ bool ModuleSceneIntro::Start()
 
 	CreateCube(road_size, vec3(0, road_height / 2, circuit_x / 2));
 	CreateCube(road_size, vec3(0, road_height / 2, circuit_x / 2 + circuit_x));
-
-	elevator1 = CreateCube(road_size, vec3(0, road_height / 2, circuit_x / 2 + circuit_x * 2));
-
+	CreateCube(vec3(1, 4, 1), vec3(9, 3, 45));
+	
+	elevator = CreateCube(road_size, vec3(0, 0, circuit_x / 2 + circuit_x * 2), false);
+	p_elevator = App->physics->AddBody(elevator, 0);
 	//Blocks motion on X axis
 	c_left1 = CreateCube(cube_size, vec3(12, 3, 55), false);
 	pc_left1 = App->physics->AddBody(c_left1, 0);
@@ -234,6 +237,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	//Level1
 	//Motion of Cube blocks on X axis
 	MoveCubeX();
+	MoveElevator();
 
 	for (p2List_item<Cube*>* tmp = cube_list.getFirst(); tmp != NULL; tmp = tmp->next){
 		tmp->data->Render();
@@ -444,4 +448,16 @@ void ModuleSceneIntro::MoveCubeX(){
 	c_right1.Render();
 	c_left2.Render();
 	c_right2.Render();
+}
+
+void ModuleSceneIntro::MoveElevator(){
+	p_elevator->GetTransform(&elevator.transform);
+	if (pos_Y_elevator >= 7)
+		temp_Y_elevator = temp_Y_elevator * -1;
+	if (pos_Y_elevator <= 0)
+		temp_Y_elevator = temp_Y_elevator * -1;
+	pos_Y_elevator += temp_Y_elevator;
+
+	p_elevator->SetPos(0,pos_Y_elevator, circuit_x / 2 + circuit_x * 2);
+	elevator.Render();
 }
