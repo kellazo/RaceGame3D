@@ -25,7 +25,7 @@ public:
 	void MoveElevators();
 	
 	//Level1
-	//void MoveCubeX();
+	void MoveCubeX();
 	void MoveCube(PhysBody3D& body, Cube cube, float motion, float velocity, bool right);
 
 	void CreatePolePosition(const float road_width, const float road_height, const float positionY, const float positionZ);
@@ -87,34 +87,11 @@ public:
 
 	//Level1
 	vec3 cube_size;
-	Cube elevator;
-	Cube c_left1, c_right1, c_left2, c_right2;
-	PhysBody3D* pc_left1;
-	PhysBody3D* pc_right1;
-	PhysBody3D* pc_left2;
-	PhysBody3D* pc_right2;
-	PhysBody3D* p_elevator;
-
-	//variables for blocks x axis motion
-	//float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
-
-	//variables elevator
-	float pY_elevator, tY_elevator;
-
-	//Level2
-	Cube elevator2;
-	PhysBody3D* p_elevator2;
-	float pY_elevator2, tY_elevator2;
-	Cube cube_checkpoint_lvl2;
-	PhysBody3D* sensor_checkpoint_lvl2;
-	//Level3
-	float posX_bob, tempb;
-	float posY_block, temp;
+	Cube ramp1,ramp2,ramp3,ramp4;
 	
 
-	//LVL5
-	PhysBody3D* block1;
-	PhysBody3D* block2;
+
+	
 
 
 
@@ -128,32 +105,3 @@ public:
 
 
 
-
-
-
-
-
-/*
-//blocks from ground and up
-Cube blockground1, blockground2;
-PhysBody3D* pblockground1;
-PhysBody3D* pblockground2;
-float py1, py2, t1, t2;
-
-//wall on middle
-Cube wall_mid1, wall_mid2;
-PhysBody3D* pwall_mid1;
-PhysBody3D* pwall_mid2;
-float pxw1, pxw2, tw1, tw2;
-
-//wall out
-Cube wall_outl;
-PhysBody3D* pwall_outl;
-Cube wall_outr;
-PhysBody3D* pwall_outr;
-float pxwo1, pxwo2, two1, two2;
-
-//flippers wall
-
-//hole road
-*/
