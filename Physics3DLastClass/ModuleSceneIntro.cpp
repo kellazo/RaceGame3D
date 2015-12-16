@@ -9,7 +9,6 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	circuit_x = 50.0f;
-	circuit_x2 = 50.0f;
 	road_width = 20.0f;
 	road_height = 2.0f;
 	high_map = 7.0f;
@@ -81,10 +80,17 @@ bool ModuleSceneIntro::Start()
 
 	c_right2 = CreateCube(cube_size, vec3(12, 3, 75), false);
 	pc_right2 = App->physics->AddBody(c_right2, 0);
-
+	//Floor lvl1
+	floor = CreateCube(vec3(300.0f, 1.0f, 1500.0f), vec3(0, -1, 0), false);
+	//floor.color = Black;
+	//floor.size.Set(5, 3, 1);
+	//floor.SetPos(0.0f, 4.5f, 20.0f);
+	floor_sensor = App->physics->AddBody(floor, 0.0f);
+	floor_sensor->SetAsSensor(true);
+	floor_sensor->collision_listeners.add(this);
 	//Level2
 	CreateCube(road_size, vec3(0, high_map, circuit_x / 2 + circuit_x * 3));
-	CreateCube(vec3(1, 4, 1), vec3(9, 10, 45+50*3));
+	CreateCube(vec3(1, 4, 1), vec3(7, 10, 45+50*3));
 	CreateCube(vec3(1, 4, 1), vec3(7, 10, 45+50*3));
 	CreateCube(vec3(road_width / 3, road_height, circuit_x / 3), vec3(-7, high_map, 209));
 	CreateCube(vec3(road_width / 4, road_height, circuit_x/3+4.5f), vec3(0, high_map, 214+road_width/3), true, 90.0f, vec3(0, 1, 0));
@@ -92,6 +98,12 @@ bool ModuleSceneIntro::Start()
 	
 	elevator2 = CreateCube(road_size, vec3(0, high_map, circuit_x / 2 + circuit_x * 5), false);
 	p_elevator2 = App->physics->AddBody(elevator, 0);
+	//CheckPoint
+	cube_checkpoint_lvl2 = CreateCube(vec3(road_width, 1, 1), vec3(0.0f, 10.0f, circuit_x*3), false);
+
+	sensor_checkpoint_lvl2 = App->physics->AddBody(cube_checkpoint_lvl2, 0.0f);
+	sensor_checkpoint_lvl2->SetAsSensor(true);
+	sensor_checkpoint_lvl2->collision_listeners.add(this);
 
 	//Level3
 	CreateCube(road_size, vec3(0, high_map*2, circuit_x / 2 + circuit_x * 6));
@@ -120,18 +132,8 @@ bool ModuleSceneIntro::Start()
 	CreateRoad(road_width, high_map * 4.5, 675.0f);
 	CreatePolePosition(road_width, high_map*2.3, high_map*2.3, 675.0f);
 
-	
-	
+	//finish
 
-	floor.size.Set(300.0f, 1.0f, 1500.0f);
-	floor.SetPos(0, -1, 0);
-	//floor.color = Black;
-	//floor.size.Set(5, 3, 1);
-	//floor.SetPos(0.0f, 4.5f, 20.0f);
-
-	floor_sensor = App->physics->AddBody(floor, 0.0f);
-	floor_sensor->SetAsSensor(true);
-	floor_sensor->collision_listeners.add(this);
 
 
 
@@ -180,7 +182,8 @@ update_status ModuleSceneIntro::Update(float dt)
 	MoveElevators();
 
 	//Level2
-
+	sensor_checkpoint_lvl2->GetTransform(&floor.transform);
+	cube_checkpoint_lvl2.Render();
 
 	//Level4
 	MotionPendulum(high_map * 3.5, 400.0f);
@@ -201,11 +204,15 @@ update_status ModuleSceneIntro::Update(float dt)
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	LOG("Hit!");
+	if (body1 == floor_sensor){
+		App->player->vehicle->ResetVelocity();
+		App->player->vehicle->SetTransform(&App->player->ini_trans);
+	}
 
-	//App->player->vehicle->SetPos(0, 3, 10);
-	App->player->vehicle->SetTransform(&App->player->ini_trans);
-	App->player->break_start = true;
-		
+	if (body1 == sensor_checkpoint_lvl2){
+		App->player->checkpoint_lvl2 = true;
+		App->player->vehicle->GetTransform(&App->player->lvl2_trans);
+	}
 }
 
 Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phys, float angle, const vec3 axis){
@@ -282,7 +289,7 @@ void ModuleSceneIntro::MoveElevators(){
 	p_elevator2->GetTransform(&elevator2.transform);
 	if (pY_elevator2 >= high_map*2)
 		tY_elevator2 = tY_elevator2 * -1;
-	if (pY_elevator2 <= high_map)
+	if (pY_elevator2 <= high_map-1.0f)
 		tY_elevator2 = tY_elevator2 * -1;
 	pY_elevator2 += tY_elevator2;
 

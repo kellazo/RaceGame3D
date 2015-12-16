@@ -18,8 +18,6 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	break_start = false;
-
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
@@ -123,7 +121,6 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
-		break_start = false;
 		acceleration = MAX_ACCELERATION;
 	}
 
@@ -156,19 +153,25 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
+		App->player->vehicle->ResetVelocity();
 		App->player->vehicle->SetTransform(&App->player->ini_trans);
-		App->player->break_start = true;
 	}
-
-	if (break_start == true)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		brake = BRAKE_POWER;
+		App->player->vehicle->ResetVelocity();
+		App->player->vehicle->SetTransform(&App->player->ini_trans);
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && checkpoint_lvl2 == true)
+	{
+	App->player->vehicle->ResetVelocity();
+	App->player->vehicle->SetTransform(&App->player->lvl2_trans);
 	}
 
 	vec3 cam_position = vehicle->GetPos();
-	//App->camera->Position = cam_position;
-	//App->camera->Position.y = (App->camera->Position.y + 15.0f);
-	//App->camera->Position.z = (App->camera->Position.z - 30.0f);
+	App->camera->Position = cam_position;
+	App->camera->Position.y = (App->camera->Position.y + 15.0f);
+	App->camera->Position.z = (App->camera->Position.z - 30.0f);
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);

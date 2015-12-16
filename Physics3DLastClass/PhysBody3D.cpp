@@ -2,6 +2,7 @@
 #include "glmath.h"
 #include "Bullet\src\btBulletDynamicsCommon.h"
 
+
 // =================================================
 PhysBody3D::PhysBody3D(btRigidBody* body) : body(body)
 {}
@@ -72,4 +73,9 @@ void PhysBody3D::SetAsSensor(bool is_sensor)
 bool PhysBody3D::IsSensor() const
 {
 	return is_sensor;
+}
+
+void PhysBody3D::ResetVelocity(){
+	body->setAngularVelocity(btVector3(0,0,0));
+	body->setLinearVelocity(btVector3(0, 0, 0));
 }

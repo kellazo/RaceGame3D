@@ -21,9 +21,10 @@ public:
 	void SetPos(float x, float y, float z);
 	void SetAsSensor(bool is_sensor);
 	bool IsSensor() const;
+	void ResetVelocity();
 
 	vec3 GetPos();
-
+	
 
 private:
 	btRigidBody* body = nullptr;

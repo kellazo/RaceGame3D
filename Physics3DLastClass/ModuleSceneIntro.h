@@ -75,11 +75,15 @@ public:
 	//------CIRCUIT
 
 	//long circuit
-	float circuit_x, circuit_x2;
+	float circuit_x;
 	float road_width = 10.0f;
 	float road_height = 2.0f;
 	float high_map;
 	vec3 road_size;
+
+	//Floor Sensor
+	PhysBody3D* floor_sensor;
+	Cube floor;
 
 	//Level1
 	vec3 cube_size;
@@ -91,9 +95,6 @@ public:
 	PhysBody3D* pc_right2;
 	PhysBody3D* p_elevator;
 
-	
-
-
 	//variables for blocks x axis motion
 	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
 
@@ -104,7 +105,8 @@ public:
 	Cube elevator2;
 	PhysBody3D* p_elevator2;
 	float pY_elevator2, tY_elevator2;
-	
+	Cube cube_checkpoint_lvl2;
+	PhysBody3D* sensor_checkpoint_lvl2;
 	//Level3
 	float posX_bob, tempb;
 	float posY_block, temp;
@@ -113,10 +115,6 @@ public:
 	//LVL5
 	PhysBody3D* block1;
 	PhysBody3D* block2;
-
-	//Floor Sensor
-	PhysBody3D* floor_sensor;
-	Cube floor;
 
 
 
