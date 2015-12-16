@@ -25,8 +25,8 @@ public:
 	void MoveElevators();
 	
 	//Level1
-	void MoveCubeX();
-
+	//void MoveCubeX();
+	void MoveCube(PhysBody3D& body, Cube cube, float motion, float velocity, bool right);
 
 	void CreatePolePosition(const float road_width, const float road_height, const float positionY, const float positionZ);
 	void CreatePendulum(const float road_width, const float road_height, const float positionY, const float positionZ);
@@ -96,7 +96,7 @@ public:
 	PhysBody3D* p_elevator;
 
 	//variables for blocks x axis motion
-	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
+	//float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
 
 	//variables elevator
 	float pY_elevator, tY_elevator;

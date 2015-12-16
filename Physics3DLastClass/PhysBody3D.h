@@ -32,6 +32,7 @@ private:
 
 public:
 	p2List<Module*> collision_listeners;
+	float velocity, motion_position;
 };
 
 #endif // __PhysBody3D_H__

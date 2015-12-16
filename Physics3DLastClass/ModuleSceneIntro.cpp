@@ -13,9 +13,9 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	road_height = 2.0f;
 	high_map = 7.0f;
 	//Level1
-	pl1 = pl2 = 12.0f;
+	/*pl1 = pl2 = 12.0f;
 	pr1 = pr2 = -12.0f;
-	tl1 = tl2 = tr1 = tr2 = 0.2f;
+	tl1 = tl2 = tr1 = tr2 = 0.2f;*/
 	pY_elevator = 7.0f;
 	tY_elevator = 0.02f;
 	//Level2
@@ -60,7 +60,7 @@ bool ModuleSceneIntro::Start()
 
 	//Level1
 
-	CreatePolePosition(road_width, road_height, 0.0f, 50.0f);
+	//CreatePolePosition(road_width, road_height, 0.0f, 25.0f);
 
 	CreateCube(road_size, vec3(0, road_height / 2, circuit_x / 2));
 	CreateCube(road_size, vec3(0, road_height / 2, circuit_x / 2 + circuit_x));
@@ -71,15 +71,22 @@ bool ModuleSceneIntro::Start()
 	//Blocks motion on X axis
 	c_left1 = CreateCube(cube_size, vec3(12, 3, 55), false);
 	pc_left1 = App->physics->AddBody(c_left1, 0);
+	
 
 	c_right1 = CreateCube(cube_size, vec3(-12, 3, 65), false);
 	pc_right1 = App->physics->AddBody(c_right1, 0);
-
+	
+	
+	
 	c_left2 = CreateCube(cube_size, vec3(12, 3, 85), false);
 	pc_left2 = App->physics->AddBody(c_left2, 0);
-
+	
+	
+	
 	c_right2 = CreateCube(cube_size, vec3(12, 3, 75), false);
 	pc_right2 = App->physics->AddBody(c_right2, 0);
+	
+	
 	//Floor lvl1
 	floor = CreateCube(vec3(300.0f, 1.0f, 1500.0f), vec3(0, -1, 0), false);
 	//floor.color = Black;
@@ -90,7 +97,7 @@ bool ModuleSceneIntro::Start()
 	floor_sensor->collision_listeners.add(this);
 	//Level2
 	CreateCube(road_size, vec3(0, high_map, circuit_x / 2 + circuit_x * 3));
-	CreateCube(vec3(1, 4, 1), vec3(7, 10, 45+50*3));
+	CreateCube(vec3(1, 4, 1), vec3(9, 10, 45+50*3));
 	CreateCube(vec3(1, 4, 1), vec3(7, 10, 45+50*3));
 	CreateCube(vec3(road_width / 3, road_height, circuit_x / 3), vec3(-7, high_map, 209));
 	CreateCube(vec3(road_width / 4, road_height, circuit_x/3+4.5f), vec3(0, high_map, 214+road_width/3), true, 90.0f, vec3(0, 1, 0));
@@ -178,7 +185,10 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	//Level1
 	//Motion of Cube blocks on X axis
-	MoveCubeX();
+	//MoveCubeX();
+	MoveCube(*pc_left1, c_left1, 12.0f, 0.2f,false);
+	//MoveCube(*pc_right1, c_right1, -12.0f, 0.2f, true);
+	
 	MoveElevators();
 
 	//Level2
@@ -234,6 +244,40 @@ Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phy
 	return *new_cube;
 }
 
+void ModuleSceneIntro::MoveCube(PhysBody3D& body, Cube cube, float motion, float velocity, bool right){
+	static int i = 1;
+	if (i==1){
+	body.velocity = velocity;
+	if (right){
+		body.motion_position = -motion;
+	}
+	else{
+		body.motion_position = motion;
+	}
+	i++;
+	}
+	body.GetTransform(&cube.transform);
+	if (right == false){
+		
+		if (body.motion_position >= motion)
+			body.velocity = body.velocity * -1;
+		if (body.motion_position <= -motion)
+			body.velocity = body.velocity * -1;
+	}
+	else{
+		if (body.motion_position >= -motion)
+			body.velocity = body.velocity * -1;
+		if (body.motion_position <= motion)
+			body.velocity = body.velocity * -1;
+	}
+	body.motion_position += body.velocity;
+	body.SetPos(body.motion_position, body.GetPos().y, body.GetPos().z);
+
+	cube.Render();
+
+}
+
+/*
 void ModuleSceneIntro::MoveCubeX(){
 	pc_left1->GetTransform(&c_left1.transform);
 	pc_right1->GetTransform(&c_right1.transform);
@@ -274,7 +318,7 @@ void ModuleSceneIntro::MoveCubeX(){
 	c_left2.Render();
 	c_right2.Render();
 }
-
+*/
 void ModuleSceneIntro::MoveElevators(){
 	p_elevator->GetTransform(&elevator.transform);
 	if (pY_elevator >= high_map)
@@ -416,6 +460,15 @@ void ModuleSceneIntro::MotionPendulum(const float positionY, const float positio
 	for (tmp4; tmp4 != NULL; tmp4 = tmp4->next){
 		for (tmp6; tmp6 != NULL; tmp6 = tmp6->next){
 			tmp6->data->GetTransform(&(tmp4->data->transform));
+			if (posX_bob >= 7)
+				tempb = tempb * -1; //suma
+			if (posX_bob <= -7)
+				tempb = tempb * -1; //resta
+			posX_bob += tempb;
+			//tmp4->data->SetRotation(posX_bob, vec3(0, 0, 1)); 
+			//SetPos(posX_bob, positionY, positionZ);
+			tmp6->data->SetTransform(&(tmp4->data->transform));
+			//tmp6->data->SetPos(posX_bob, positionY, positionZ);
 			tmp4->data->Render();
 		}
 	}
