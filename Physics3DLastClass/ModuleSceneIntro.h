@@ -26,14 +26,40 @@ public:
 	
 	//Level1
 	void MoveCubeX();
-	//Level2
+
+
+	void CreatePolePosition(const float road_width, const float road_height, const float positionY, const float positionZ);
+	void CreatePendulum(const float road_width, const float road_height, const float positionY, const float positionZ);
+	void RenderStaticPieces();
+	void MotionPendulum(const float positionY, const float positionZ);
+	PhysBody3D* PutBlock(const float positionY, const float positionZ);
+	void MovementBlock(PhysBody3D* body, float posZ);
+	void CreateRoad(const float road_width, const float positionY, const float positionZ);
+	
 	
 
 public:
-	
+	//<--List Primitives Objects statics
 	p2List<Cube*> cube_list;
+	p2List<Cylinder*> cylinders;
+	p2List<Sphere*> spheres;
+
+	//<--List Primitives and pbodies with mass
+	p2List<Cylinder*> cylinders_move;
+	p2List<Sphere*> spheres_move;
+	p2List<PhysBody3D*> pbpieces_cylinders_move;
+	p2List<PhysBody3D*> pbpieces_spheres_move;
+
+	//?
+	p2List<PhysBody3D*> pbpieces;
 	p2List<Cube*> cube_list_move;
+
+	//<-- List of blocks that have motion
+	p2List<Cube*> block_list_move;
 	
+
+	
+	//<----CAR------------>
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
@@ -54,8 +80,6 @@ public:
 	float road_height = 2.0f;
 	float high_map;
 	vec3 road_size;
-	//more road path
-	Cube road3, road4, road5, road6, road7, road8, road9, road10;
 
 	//Level1
 	vec3 cube_size;
@@ -67,8 +91,12 @@ public:
 	PhysBody3D* pc_right2;
 	PhysBody3D* p_elevator;
 
+	
+
+
 	//variables for blocks x axis motion
 	float pl1, pl2, pr1, pr2, tl1, tl2, tr1, tr2;
+
 	//variables elevator
 	float pY_elevator, tY_elevator;
 
@@ -78,50 +106,13 @@ public:
 	float pY_elevator2, tY_elevator2;
 	
 	//Level3
-
-	/*
-	Cube road_start, road_path1, poster, block;
-	Cylinder pole_left, pole_right;
-	//Simple Pendulum
-	PhysBody3D* psupport;
-	PhysBody3D* prod;
-	PhysBody3D* pbob;
-	Cube support;
-	Cylinder rod;
-	Sphere bob;
 	float posX_bob, tempb;
+	float posY_block, temp;
+	
 
-	//block y motion
-	//PhysBody3D* pbblock;
-	//float posY_block, temp;
-
-	//blocks from ground and up
-	Cube blockground1, blockground2;
-	PhysBody3D* pblockground1;
-	PhysBody3D* pblockground2;
-	float py1, py2, t1, t2;
-
-	//wall on middle
-	Cube wall_mid1, wall_mid2;
-	PhysBody3D* pwall_mid1;
-	PhysBody3D* pwall_mid2;
-	float pxw1, pxw2, tw1, tw2;
-
-	//wall out
-	Cube wall_outl;
-	PhysBody3D* pwall_outl;
-	Cube wall_outr;
-	PhysBody3D* pwall_outr;
-	float pxwo1, pxwo2, two1, two2;
-
-	//flippers wall
-
-	//hole road
-	*/
-
-	p2List<PhysBody3D*> pbpieces;
-	p2List<Primitive> pieces;
-
+	//LVL5
+	PhysBody3D* block1;
+	PhysBody3D* block2;
 
 	//Floor Sensor
 	PhysBody3D* floor_sensor;
@@ -130,3 +121,41 @@ public:
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//blocks from ground and up
+Cube blockground1, blockground2;
+PhysBody3D* pblockground1;
+PhysBody3D* pblockground2;
+float py1, py2, t1, t2;
+
+//wall on middle
+Cube wall_mid1, wall_mid2;
+PhysBody3D* pwall_mid1;
+PhysBody3D* pwall_mid2;
+float pxw1, pxw2, tw1, tw2;
+
+//wall out
+Cube wall_outl;
+PhysBody3D* pwall_outl;
+Cube wall_outr;
+PhysBody3D* pwall_outr;
+float pxwo1, pxwo2, two1, two2;
+
+//flippers wall
+
+//hole road
+*/
