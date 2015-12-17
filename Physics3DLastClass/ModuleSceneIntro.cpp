@@ -26,12 +26,7 @@ bool ModuleSceneIntro::Start()
 	//Floor
 	
 	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0));
-	//floor.color.Set(255, 255, 0, 0.5f);
 
-	/*CreateSphere(vec3(0.0f, 3.0f, 20.0f), 2);
-	CreateSphere(vec3(0.0f, 3.0f, 25.0f), 2);
-	CreateSphere(vec3(0.0f, 3.0f, 30.0f), 2);
-	*/
 	CreateRandSpheres(3);
 
 	return ret;
@@ -93,7 +88,7 @@ Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phy
 		new_cube->SetRotation(angle, axis);
 
 	new_cube->SetPos(position.x, position.y, position.z);
-	
+
 	App->physics->AddBody(*new_cube, 0);
 	cube_list.add(new_cube);
 
@@ -114,15 +109,20 @@ void ModuleSceneIntro::RenderStaticPieces()
 	for (tmp2; tmp2 != NULL; tmp2 = tmp2->next){
 		tmp2->data->GetTransform(&tmp1->data->transform);
 		tmp1->data->Render();
+		tmp1 = tmp1->next;
 	}
 	
 }
 
 void ModuleSceneIntro::CreateSphere(const vec3& position, float radius)
 {
+	float r = rand() % 5;
+	float g = rand() % 5;
+	float b = rand() % 5;
 	Sphere* new_sphere = new Sphere();
 	new_sphere->radius = radius;
 	new_sphere->SetPos(position.x, position.y, position.z);
+	new_sphere->color.Set(r, g, b);
 	spheres.add(new_sphere);
 
 	PhysBody3D* new_sphere_body = new PhysBody3D();
