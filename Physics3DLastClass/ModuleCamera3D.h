@@ -2,6 +2,9 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
+#include "PhysVehicle3D.h"
+
+struct PhysVehicle3D;
 
 class ModuleCamera3D : public Module
 {
@@ -25,6 +28,7 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
+	PhysVehicle3D* bodyToFollow;
 
 private:
 
