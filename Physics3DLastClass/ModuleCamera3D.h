@@ -31,6 +31,6 @@ public:
 	PhysVehicle3D* bodyToFollow;
 
 private:
-
+	bool camera;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 };

@@ -4,6 +4,9 @@
 
 
 // =================================================
+PhysBody3D::PhysBody3D()
+{}
+
 PhysBody3D::PhysBody3D(btRigidBody* body) : body(body)
 {}
 
