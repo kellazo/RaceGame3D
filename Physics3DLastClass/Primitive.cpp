@@ -25,7 +25,7 @@ void Primitive::Render() const
 
 	if(axis == true)
 	{
-		// Draw Axis Grid
+		// Draw Axis 
 		glLineWidth(2.0f);
 
 		glBegin(GL_LINES);

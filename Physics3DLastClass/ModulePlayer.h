@@ -21,8 +21,10 @@ public:
 
 public:
 
+	bool god_mode;
+
 	PhysVehicle3D* vehicle;
-	float turn;
+	float turn, turn_num;
 	float acceleration;
 	float brake;
 	vec3 xpos;
@@ -32,4 +34,11 @@ public:
 	bool start;
 	bool win;
 	bool lose;
+
+	//uint fx
+	uint sound_motor;
+	uint victorious;
+	uint game_over;
+	uint accelerate;
+	uint car_break;
 };

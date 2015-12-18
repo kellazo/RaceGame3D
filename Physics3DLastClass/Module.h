@@ -17,6 +17,11 @@ public:
 	virtual ~Module()
 	{}
 
+	bool IsEnabled() const
+	{
+		return enabled;
+	}
+
 	virtual bool Init() 
 	{
 		return true; 

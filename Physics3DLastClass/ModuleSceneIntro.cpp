@@ -28,15 +28,17 @@ bool ModuleSceneIntro::Start()
 	best_time = 0.0f;
 	balls_left = NUM_BALLS;
 	//Floor
-	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0));
+	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0), vec3(0.0f, 5.0f, 1.0f));
 	
 	//Walls
-	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, 75.0f));
-	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, -75.0f));
-	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(75.0f, 10.0f, 0));
-	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(-75.0f, 10.0f, 0));
+	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, 75.0f), vec3(0.0f,1.0f,5.0f));
+	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, -75.0f), vec3(0.0f, 1.0f, 5.0f));
+	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(75.0f, 10.0f, 0), vec3(0.0f, 1.0f, 5.0f));
+	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(-75.0f, 10.0f, 0), vec3(0.0f, 1.0f, 5.0f));
 
 	CreateRandSpheres(NUM_BALLS);
+	App->audio->PlayMusic("MasterOfPuppets.ogg");
+
 
 	return ret;
 }
@@ -65,16 +67,20 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 	
-	if (App->player->start){
-		time -= 0.02f;
-	}
-
 	RenderStaticPieces();
-
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-	{
-		CreateRandSpheres(1);
+	
+	if (App->player->god_mode == false){
+		if (App->player->start){
+			time -= 0.02f;
+		}
 	}
+	if (App->player->god_mode){
+		if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+		{
+			CreateRandSpheres(1);
+		}
+	}
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -96,14 +102,19 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	}
 }
 
-Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position, bool phys, float angle, const vec3 axis){
+Cube ModuleSceneIntro::CreateCube(const vec3 size, const vec3 position,  vec3 color, bool phys, float angle, const vec3 axis){
 	Cube* new_cube = new Cube();
 	new_cube->size.Set(size.x,size.y,size.z);
 	if (angle != 0.0f)
 		new_cube->SetRotation(angle, axis);
 
 	new_cube->SetPos(position.x, position.y, position.z);
-
+	if (color.x == 0.0f && color.y == 0.0f && color.z == 0.0f){
+		color.x = 1.0f;
+		color.y = 1.0f;
+		color.z = 1.0f;
+	}
+	new_cube->color.Set(color.x, color.y, color.z);
 	App->physics->AddBody(*new_cube, 0);
 	cube_list.add(new_cube);
 
@@ -152,8 +163,8 @@ void ModuleSceneIntro::CreateSphere(const vec3& position, float radius)
 void ModuleSceneIntro::CreateRandSpheres(int num_spheres){
 
 	for (int i = 0; i < num_spheres; i++){
-		float x_rand = 75-rand() % 145;
-		float z_rand = 75-rand() % 145;
+		float x_rand = 72-rand() % 145;
+		float z_rand = 72-rand() % 145;
 		CreateSphere(vec3(x_rand, 3.0f, z_rand), 2);
 	}
 

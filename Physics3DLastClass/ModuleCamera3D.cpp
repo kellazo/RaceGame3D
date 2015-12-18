@@ -40,13 +40,10 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
-	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-	{
-		if (camera){
-			camera = false;
-		}
-		else{
-			camera = true;
+	if (App->player->god_mode){
+		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+		{
+			camera = !camera;
 		}
 	}
 	if (camera){
@@ -55,8 +52,8 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			speed = 8.0f * dt;
 
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed * 10;
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed * 10;
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed * 10;
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed * 10;
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed * 10;
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed * 10;

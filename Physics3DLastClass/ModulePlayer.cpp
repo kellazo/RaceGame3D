@@ -7,7 +7,8 @@
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
-	turn = acceleration = brake = 0.0f;
+	turn = turn_num = acceleration = brake = 0.0f;
+	start = win = lose= god_mode = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -18,14 +19,17 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	start = false;
-	win = false;
-	lose = false;
+	//SoundsFx
+	victorious = App->audio->LoadFx("Victorious.ogg");
+	game_over = App->audio->LoadFx("GameOver.ogg");
+	accelerate = App->audio->LoadFx("Accelerate.ogg");
+	car_break = App->audio->LoadFx("Break.ogg");
 
+	//vehicle set
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(4, 2, 7);
+	car.chassis_size.Set(4, 1, 7);
 	car.chassis_offset.Set(0, 1.5, 0);
 	car.mass = 500.0f;
 	car.suspensionStiffness = 15.88f;
@@ -37,8 +41,8 @@ bool ModulePlayer::Start()
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 01.2f;
-	float wheel_radius = 0.6f;
-	float wheel_width = 0.5f;
+	float wheel_radius = 0.7f;
+	float wheel_width = 0.7f;
 	float suspensionRestLength = 1.2f;
 
 	// Don't change anything below this line ------------------
@@ -122,6 +126,11 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
+	
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		god_mode = !god_mode;
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 	{
@@ -142,13 +151,18 @@ update_status ModulePlayer::Update(float dt)
 
 			p2List_item<PhysBody3D*>* tmp = App->scene_intro->spheres_body.getFirst();
 			for (tmp; tmp != NULL; tmp = tmp->next){
-				float x_rand = 75 - rand() % 145;
-				float z_rand = 75 - rand() % 145;
+				float x_rand = 72 - rand() % 145;
+				float z_rand = 72 - rand() % 145;
 					tmp->data->SetPos(x_rand, 3, z_rand);
 					
 			}
 		}
 	if (start){
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+		{
+			App->audio->PlayFx(accelerate);
+		}
+
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
 			acceleration = MAX_ACCELERATION * 4;
@@ -159,16 +173,26 @@ update_status ModulePlayer::Update(float dt)
 			acceleration = -MAX_ACCELERATION * 4;
 		}
 
+		if ((turn_num>50.0f || turn_num<-50.0f) && vehicle->GetKmh()>100.0f)
+		{
+			App->audio->PlayFx(car_break);
+			turn_num = 0.0f;
+		}
+
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		{
 			if (turn < TURN_DEGREES)
 				turn += TURN_DEGREES;
-		}
 
+			turn_num++;
+		}
+	
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
 			if (turn > -TURN_DEGREES)
 				turn -= TURN_DEGREES;
+
+			turn_num--;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
@@ -179,10 +203,12 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->scene_intro->balls_left == 0){
 		win = true;
+		App->audio->PlayFx(victorious);
 	}
 	if (App->scene_intro->time <= 0.0f){
 		App->scene_intro->time == 0.0f;
 		lose = true;
+		App->audio->PlayFx(game_over);
 	}
 	if (win==false && lose==false){
 		char title[80];

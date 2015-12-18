@@ -21,7 +21,7 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true, float angle=0.0f, const vec3 axis=vec3(0,0,0));
+	Cube CreateCube(const vec3 size, const vec3 position, vec3 color = vec3(1.0f,1.0f,1.0f), bool phys = true, float angle = 0.0f, const vec3 axis = vec3(0, 0, 0));
 	void CreateSphere(const vec3& position, float radius);
 	void CreateRandSpheres(int num_spheres);
 
