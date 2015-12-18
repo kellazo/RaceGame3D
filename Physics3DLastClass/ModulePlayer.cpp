@@ -132,36 +132,17 @@ update_status ModulePlayer::Update(float dt)
 		god_mode = !god_mode;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
 	{
+		App->audio->PlayFx(accelerate);
 		start = true;
 	}
 
-
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		{
-			start = false;
-			win = false;
-			lose = false;
-			App->scene_intro->balls_left = NUM_BALLS;
-			App->scene_intro->time = TIME;
-			App->player->vehicle->ResetVelocity();
-			App->player->vehicle->SetTransform(&App->player->ini_trans);
-
-
-			p2List_item<PhysBody3D*>* tmp = App->scene_intro->spheres_body.getFirst();
-			for (tmp; tmp != NULL; tmp = tmp->next){
-				float x_rand = 72 - rand() % 145;
-				float z_rand = 72 - rand() % 145;
-					tmp->data->SetPos(x_rand, 3, z_rand);
-					
-			}
-		}
-	if (start){
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
-		{
-			App->audio->PlayFx(accelerate);
-		}
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		Restart();
+	}
+if (start){
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
@@ -210,6 +191,7 @@ update_status ModulePlayer::Update(float dt)
 		lose = true;
 		App->audio->PlayFx(game_over);
 	}
+
 	if (win==false && lose==false){
 		char title[80];
 		sprintf_s(title, "Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->balls_left, NUM_BALLS, App->scene_intro->best_time);
@@ -222,6 +204,7 @@ update_status ModulePlayer::Update(float dt)
 		char title[80];
 		sprintf_s(title, "YOU WIN! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->balls_left, NUM_BALLS, App->scene_intro->best_time);
 		App->window->SetTitle(title);
+		
 	}
 	if (lose){
 		start = false;
@@ -239,5 +222,24 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePlayer::Restart()
+{
+	
+	start = false;
+	win = false;
+	lose = false;
+	App->scene_intro->balls_left = NUM_BALLS;
+	App->scene_intro->time = TIME;
+	App->player->vehicle->ResetVelocity();
+	App->player->vehicle->SetTransform(&App->player->ini_trans);
 
+
+	p2List_item<PhysBody3D*>* tmp = App->scene_intro->spheres_body.getFirst();
+	for (tmp; tmp != NULL; tmp = tmp->next){
+		float x_rand = 72 - rand() % 145;
+		float z_rand = 72 - rand() % 145;
+		tmp->data->SetPos(x_rand, 3, z_rand);
+
+	}
+}
 
