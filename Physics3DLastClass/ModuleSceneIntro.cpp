@@ -29,6 +29,7 @@ bool ModuleSceneIntro::Start()
 	//Floor
 	
 	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0));
+	Create4Walls();
 
 	CreateRandSpheres(NUM_BALLS);
 
@@ -149,6 +150,22 @@ void ModuleSceneIntro::CreateRandSpheres(int num_spheres){
 		CreateSphere(vec3(x_rand, 3.0f, z_rand), 2);
 	}
 
+}
+
+void ModuleSceneIntro::Create4Walls()
+{
+	//for (int i = 0; i <= 4; i++)
+	CreateCube(vec3(150.0f, 50.0f, 5.0f), vec3(0, 11, 74));
+
+}
+
+void ModuleSceneIntro::CreateRandWalls(int num_walls)
+{
+	for (int i = 0; i < num_walls; i++){
+		float x_rand = 75 - rand() % 145;
+		float z_rand = 75 - rand() % 145;
+		CreateSphere(vec3(x_rand, 3.0f, z_rand), 2);
+	}
 }
 
 
