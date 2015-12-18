@@ -5,6 +5,7 @@
 #include "PhysBody3D.h"
 #include "ModulePlayer.h"
 #include "PhysVehicle3D.h"
+#include <ctime>
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -23,11 +24,13 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(0.0f, 13.0f, -10.0f));
 	App->camera->LookAt(vec3(0, 5, 6));
 	
+	time = TIME;
+	best_time = 0.0f;
 	//Floor
 	
 	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0));
 
-	CreateRandSpheres(3);
+	CreateRandSpheres(NUM_BALLS);
 
 	return ret;
 }
@@ -53,6 +56,10 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 	
+	if (App->player->start){
+		time -= 0.02f;
+	}
+
 	RenderStaticPieces();
 
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
@@ -135,12 +142,11 @@ void ModuleSceneIntro::CreateSphere(const vec3& position, float radius)
 }
 
 void ModuleSceneIntro::CreateRandSpheres(int num_spheres){
-	float j = 20.0f;
+
 	for (int i = 0; i < num_spheres; i++){
 		float x_rand = 75-rand() % 145;
 		float z_rand = 75-rand() % 145;
 		CreateSphere(vec3(x_rand, 3.0f, z_rand), 2);
-		j += 5.0f;
 	}
 
 }

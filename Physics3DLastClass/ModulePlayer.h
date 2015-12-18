@@ -32,4 +32,7 @@ public:
 	mat4x4 lvl2_trans;
 	mat4x4 lvl3_trans;
 	
+	bool start;
+	bool win;
+	bool lose;
 };

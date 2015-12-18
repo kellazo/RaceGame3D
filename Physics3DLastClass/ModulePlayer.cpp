@@ -18,6 +18,10 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
+	start = false;
+	win = false;
+	lose = false;
+
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
@@ -119,66 +123,93 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 	{
-		acceleration = MAX_ACCELERATION*4;
+		start = true;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		acceleration = -MAX_ACCELERATION*4;
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+			start = false;
+			win = false;
+			lose = false;
+			App->scene_intro->time = TIME;
+			App->player->vehicle->ResetVelocity();
+			App->player->vehicle->SetTransform(&App->player->ini_trans);
+
+
+			p2List_item<PhysBody3D*>* tmp = App->scene_intro->spheres_body.getFirst();
+			
+			for (tmp; tmp != NULL; tmp = tmp->next){
+					tmp->data->SetPos(tmp->data->GetPos().x, tmp->data->GetPos().y - 6, tmp->data->GetPos().z);
+					
+			}
+			App->scene_intro->spheres_body.clear();
+			App->scene_intro->CreateRandSpheres(NUM_BALLS);
+		}
+	if (start){
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			acceleration = MAX_ACCELERATION * 4;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			acceleration = -MAX_ACCELERATION * 4;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			if (turn < TURN_DEGREES)
+				turn += TURN_DEGREES;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			if (turn > -TURN_DEGREES)
+				turn -= TURN_DEGREES;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
+		{
+			brake = BRAKE_POWER;
+		}
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		if(turn < TURN_DEGREES)
-			turn +=  TURN_DEGREES;
+	if (App->scene_intro->spheres_body.count() == 0){
+		win = true;
 	}
-
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		if(turn > -TURN_DEGREES)
-			turn -= TURN_DEGREES;
+	if (App->scene_intro->time <= 0.0f){
+		App->scene_intro->time == 0.0f;
+		lose = true;
 	}
-
-	if(App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
-	{
+	if (win==false && lose==false){
+		char title[80];
+		sprintf_s(title, "Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		App->window->SetTitle(title);
+	}
+	if (win){
+		start = false;
 		brake = BRAKE_POWER;
+		App->scene_intro->best_time = MAX(App->scene_intro->best_time, App->scene_intro->time);
+		char title[80];
+		sprintf_s(title, "YOU WIN! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		App->window->SetTitle(title);
+	}
+	if (lose){
+		start = false;
+		brake = BRAKE_POWER;
+		char title[80];
+		sprintf_s(title, "YOU LOSE! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		App->window->SetTitle(title);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT)
-	{
-		acceleration = 4*MAX_ACCELERATION;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		App->player->vehicle->ResetVelocity();
-		App->player->vehicle->SetTransform(&App->player->ini_trans);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		App->player->vehicle->ResetVelocity();
-		App->player->vehicle->SetTransform(&App->player->ini_trans);
-	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && checkpoint_lvl2 == true)
-	{
-	App->player->vehicle->ResetVelocity();
-	App->player->vehicle->SetTransform(&App->player->lvl2_trans);
-	}
-
-	
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
 
 	vehicle->Render();
-
-	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
-
 	return UPDATE_CONTINUE;
 }
 

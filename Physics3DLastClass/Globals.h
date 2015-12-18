@@ -34,3 +34,6 @@ enum update_status
 #define TITLE "3D Physics Playground"
 
 #define VELOCITY 0.1f
+#define TIME 5.0f
+#define NUM_BALLS 2
+#define MAX(a,b)  ((a)>(b)) ? a : b

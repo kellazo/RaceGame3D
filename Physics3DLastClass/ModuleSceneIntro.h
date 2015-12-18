@@ -55,6 +55,9 @@ public:
 	//Floor
 	Cube floor;
 
+	Timer crono;
+	float time;
+	float best_time;
 };
 
 
