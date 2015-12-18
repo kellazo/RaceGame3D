@@ -35,5 +35,5 @@ enum update_status
 
 #define VELOCITY 0.1f
 #define TIME 20.0f
-#define NUM_BALLS 20
+#define NUM_BALLS 10
 #define MAX(a,b)  ((a)>(b)) ? a : b

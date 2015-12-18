@@ -24,8 +24,6 @@ public:
 	Cube CreateCube(const vec3 size, const vec3 position, bool phys = true, float angle=0.0f, const vec3 axis=vec3(0,0,0));
 	void CreateSphere(const vec3& position, float radius);
 	void CreateRandSpheres(int num_spheres);
-	void Create4Walls();
-	void CreateRandWalls(int num_walls);
 
 	void RenderStaticPieces();
 
@@ -60,6 +58,8 @@ public:
 	Timer crono;
 	float time;
 	float best_time;
+
+	int balls_left;
 };
 
 

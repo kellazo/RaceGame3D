@@ -26,10 +26,15 @@ bool ModuleSceneIntro::Start()
 	
 	time = TIME;
 	best_time = 0.0f;
+	balls_left = NUM_BALLS;
 	//Floor
-	
 	CreateCube(vec3(150.0f, 1.0f, 150.0f), vec3(0, 0, 0));
-	Create4Walls();
+	
+	//Walls
+	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, 75.0f));
+	CreateCube(vec3(150.0f, 20.0f, 1.0f), vec3(0, 10.0f, -75.0f));
+	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(75.0f, 10.0f, 0));
+	CreateCube(vec3(1.0f, 20.0f, 150.0f), vec3(-75.0f, 10.0f, 0));
 
 	CreateRandSpheres(NUM_BALLS);
 
@@ -43,10 +48,13 @@ bool ModuleSceneIntro::CleanUp()
 	for (p2List_item<Cube*>* tmp = cube_list.getFirst(); tmp != NULL; tmp = tmp->next){
 		delete tmp->data;
 	}
-	
+	cube_list.clear();
 	for (p2List_item<Sphere*>* tmp = spheres.getFirst(); tmp != NULL; tmp = tmp->next){
 		delete tmp->data;
 	}
+	spheres.clear();
+
+	spheres_body.clear();
 	return true;
 }
 
@@ -79,9 +87,8 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	for (tmp2; tmp2 != NULL; tmp2 = tmp2->next){
 		
 		if (i == spheres_body.find(body1)){
-			spheres.del(tmp1);
 			tmp2->data->SetPos(tmp2->data->GetPos().x, tmp2->data->GetPos().y - 6, tmp2->data->GetPos().z);
-			spheres_body.del(tmp2);
+			balls_left--;
 			break;
 		}
 		i++;
@@ -151,23 +158,6 @@ void ModuleSceneIntro::CreateRandSpheres(int num_spheres){
 	}
 
 }
-
-void ModuleSceneIntro::Create4Walls()
-{
-	//for (int i = 0; i <= 4; i++)
-	CreateCube(vec3(150.0f, 50.0f, 5.0f), vec3(0, 11, 74));
-
-}
-
-void ModuleSceneIntro::CreateRandWalls(int num_walls)
-{
-	for (int i = 0; i < num_walls; i++){
-		float x_rand = 75 - rand() % 145;
-		float z_rand = 75 - rand() % 145;
-		CreateSphere(vec3(x_rand, 3.0f, z_rand), 2);
-	}
-}
-
 
 
 

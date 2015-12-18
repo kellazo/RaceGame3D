@@ -91,7 +91,7 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			PhysBody3D* hola = (PhysBody3D*)vehicles.getFirst();
 			if (hola && pbodyB && pbodyB->IsSensor())
 			{
-				p2List_item<Module*>* item = hola->collision_listeners.getFirst();
+				p2List_item<Module*>* item = pbodyB->collision_listeners.getFirst();
 				while(item)
 				{
 					item->data->OnCollision(hola, pbodyB);

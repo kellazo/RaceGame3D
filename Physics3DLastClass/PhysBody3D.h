@@ -25,10 +25,10 @@ public:
 	void ResetVelocity();
 
 	vec3 GetPos();
-	
+	btRigidBody* body = nullptr;
 
 private:
-	btRigidBody* body = nullptr;
+	
 	bool is_sensor = false;
 
 public:

@@ -25,7 +25,7 @@ bool ModulePlayer::Start()
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(2, 2, 4);
+	car.chassis_size.Set(4, 2, 7);
 	car.chassis_offset.Set(0, 1.5, 0);
 	car.mass = 500.0f;
 	car.suspensionStiffness = 15.88f;
@@ -134,19 +134,19 @@ update_status ModulePlayer::Update(float dt)
 			start = false;
 			win = false;
 			lose = false;
+			App->scene_intro->balls_left = NUM_BALLS;
 			App->scene_intro->time = TIME;
 			App->player->vehicle->ResetVelocity();
 			App->player->vehicle->SetTransform(&App->player->ini_trans);
 
 
 			p2List_item<PhysBody3D*>* tmp = App->scene_intro->spheres_body.getFirst();
-			
 			for (tmp; tmp != NULL; tmp = tmp->next){
-					tmp->data->SetPos(tmp->data->GetPos().x, tmp->data->GetPos().y - 6, tmp->data->GetPos().z);
+				float x_rand = 75 - rand() % 145;
+				float z_rand = 75 - rand() % 145;
+					tmp->data->SetPos(x_rand, 3, z_rand);
 					
 			}
-			App->scene_intro->spheres_body.clear();
-			App->scene_intro->CreateRandSpheres(NUM_BALLS);
 		}
 	if (start){
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -177,7 +177,7 @@ update_status ModulePlayer::Update(float dt)
 		}
 	}
 
-	if (App->scene_intro->spheres_body.count() == 0){
+	if (App->scene_intro->balls_left == 0){
 		win = true;
 	}
 	if (App->scene_intro->time <= 0.0f){
@@ -186,7 +186,7 @@ update_status ModulePlayer::Update(float dt)
 	}
 	if (win==false && lose==false){
 		char title[80];
-		sprintf_s(title, "Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		sprintf_s(title, "Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->balls_left, NUM_BALLS, App->scene_intro->best_time);
 		App->window->SetTitle(title);
 	}
 	if (win){
@@ -194,14 +194,14 @@ update_status ModulePlayer::Update(float dt)
 		brake = BRAKE_POWER;
 		App->scene_intro->best_time = MAX(App->scene_intro->best_time, App->scene_intro->time);
 		char title[80];
-		sprintf_s(title, "YOU WIN! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		sprintf_s(title, "YOU WIN! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->balls_left, NUM_BALLS, App->scene_intro->best_time);
 		App->window->SetTitle(title);
 	}
 	if (lose){
 		start = false;
 		brake = BRAKE_POWER;
 		char title[80];
-		sprintf_s(title, "YOU LOSE! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->spheres_body.count(), NUM_BALLS, App->scene_intro->best_time);
+		sprintf_s(title, "YOU LOSE! Time left: %f, Balls left: %d/%d, Best Time: %f", App->scene_intro->time, App->scene_intro->balls_left, NUM_BALLS, App->scene_intro->best_time);
 		App->window->SetTitle(title);
 	}
 
