@@ -89,7 +89,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	p2List_item<Sphere*>* tmp1 = spheres.getFirst();
 	p2List_item<PhysBody3D*>* tmp2 = spheres_body.getFirst();
-	int i = 10;
+	int i = 0;
 	for (tmp2; tmp2 != NULL; tmp2 = tmp2->next){
 		
 		if (i == spheres_body.find(body1)){
@@ -97,7 +97,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 			balls_left--;
 			break;
 		}
-		i--;
+		i++;
 		tmp1=tmp1->next;
 	}
 }
